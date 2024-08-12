@@ -67,10 +67,15 @@ function drawSkeleton(keypoints) {
 }
 
 function drawPose(pose) {
-    ctx.clearRect(0, 0, 640, 480);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 映像をキャンバスに描画
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // 関節点と骨格を描画
     const keypoints = pose.keypoints;
-    drawKeypoints(keypoints);  // 関節点の描画
-    drawSkeleton(keypoints);   // 骨格の描画
+    drawKeypoints(keypoints);
+    drawSkeleton(keypoints);
 }
 
 async function main() {
