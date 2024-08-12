@@ -2,16 +2,12 @@ const video = document.getElementById('video');
 const canvas = document.getElementById('output');
 const ctx = canvas.getContext('2d');
 
-// ポーズを構成する関節ペアを定義
+// 定義された関節ペア（これにより骨格が描画される）
 const adjacentKeyPoints = [
-    ['nose', 'leftEye'], ['nose', 'rightEye'], 
-    ['leftEye', 'leftEar'], ['rightEye', 'rightEar'], 
-    ['leftShoulder', 'rightShoulder'],
-    ['leftShoulder', 'leftElbow'], ['leftElbow', 'leftWrist'],
-    ['rightShoulder', 'rightElbow'], ['rightElbow', 'rightWrist'],
-    ['leftShoulder', 'leftHip'], ['rightShoulder', 'rightHip'],
-    ['leftHip', 'rightHip'], ['leftHip', 'leftKnee'], ['leftKnee', 'leftAnkle'],
-    ['rightHip', 'rightKnee'], ['rightKnee', 'rightAnkle']
+    [5, 6], [5, 7], [7, 9], [6, 8], [8, 10], // 左右の肩、肘、手首
+    [5, 11], [6, 12], // 肩から腰
+    [11, 12], [11, 13], [13, 15], [12, 14], [14, 16], // 腰から膝、足首
+    [0, 1], [1, 3], [0, 2], [2, 4] // 頭部
 ];
 
 async function setupCamera() {
@@ -55,11 +51,11 @@ function drawKeypoints(keypoints) {
 }
 
 function drawSkeleton(keypoints) {
-    adjacentKeyPoints.forEach(([partA, partB]) => {
-        const pointA = keypoints.find(kp => kp.part === partA);
-        const pointB = keypoints.find(kp => kp.part === partB);
+    adjacentKeyPoints.forEach(([i, j]) => {
+        const pointA = keypoints[i];
+        const pointB = keypoints[j];
 
-        if (pointA && pointB && pointA.score > 0.6 && pointB.score > 0.6) {
+        if (pointA.score > 0.6 && pointB.score > 0.6) {
             ctx.beginPath();
             ctx.moveTo(pointA.position.x, pointA.position.y);
             ctx.lineTo(pointB.position.x, pointB.position.y);
